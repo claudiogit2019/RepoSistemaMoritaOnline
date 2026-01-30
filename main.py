@@ -32,10 +32,8 @@ def exportar_excel(datos):
         df.columns = ["PRODUCTO", "PRECIO ($)", "STOCK"]
     
     output = io.BytesIO()
-    # Usamos xlsxwriter para generar columnas reales e independientes
     with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
         df.to_excel(writer, index=False, sheet_name='Inventario_Morita')
-        # Auto-ajuste de columnas
         worksheet = writer.sheets['Inventario_Morita']
         for i, col in enumerate(df.columns):
             column_len = max(df[col].astype(str).str.len().max(), len(col)) + 2
@@ -152,6 +150,13 @@ with tabs[0]:
     with col2:
         st.subheader("📋 FACTURA ACTUAL")
         if st.session_state.carrito:
+            # 1. VALIDAR STOCK ANTES DE MOSTRAR OPCIONES DE PAGO
+            error_stock = []
+            for item in st.session_state.carrito:
+                prod_inv = next((p for p in st.session_state.inventario if p['Producto'].lower() == item['Producto'].lower()), None)
+                if prod_inv and prod_inv['Stock'] < item['Cantidad']:
+                    error_stock.append(f"{item['Producto']} (Stock: {prod_inv['Stock']})")
+
             for idx, item in enumerate(st.session_state.carrito):
                 cx1, cx2, cx3, cx4 = st.columns([3, 1, 1.5, 0.5])
                 cx1.markdown(f"**{item['Producto'].upper()}**")
@@ -162,24 +167,29 @@ with tabs[0]:
             
             total = sum(i['Subtotal'] for i in st.session_state.carrito)
             st.markdown(f"# TOTAL: ${total:,.2f}")
-            paga = st.number_input("PAGA CON ($):", min_value=float(total))
-            st.warning(f"## VUELTO: ${paga - total:,.2f}")
-            cli = st.text_input("NOMBRE CLIENTE:", "CONSUMIDOR FINAL")
             
-            pdf = generar_ticket_pdf(cli, st.session_state.carrito, total, paga, paga - total)
-            if st.download_button("📥 FINALIZAR Y TICKET", data=pdf, file_name=f"ticket_{cli}.pdf"):
-                for i in st.session_state.carrito:
-                    for p in st.session_state.inventario:
-                        if p['Producto'].lower() == i['Producto'].lower(): p['Stock'] -= i['Cantidad']
-                guardar_datos(st.session_state.inventario)
-                st.session_state.carrito = []
-                st.rerun()
+            if error_stock:
+                st.error(f"⚠️ STOCK INSUFICIENTE EN: {', '.join(error_stock)}. Ajuste el carrito para continuar.")
+            else:
+                paga = st.number_input("PAGA CON ($):", min_value=float(total))
+                st.warning(f"## VUELTO: ${paga - total:,.2f}")
+                cli = st.text_input("NOMBRE CLIENTE:", "CONSUMIDOR FINAL")
+                
+                pdf = generar_ticket_pdf(cli, st.session_state.carrito, total, paga, paga - total)
+                if st.download_button("📥 FINALIZAR Y TICKET", data=pdf, file_name=f"ticket_{cli}.pdf"):
+                    # Descontar stock definitivamente
+                    for i in st.session_state.carrito:
+                        for p in st.session_state.inventario:
+                            if p['Producto'].lower() == i['Producto'].lower(): 
+                                p['Stock'] -= i['Cantidad']
+                    guardar_datos(st.session_state.inventario)
+                    st.session_state.carrito = []
+                    st.rerun()
 
 # --- TAB 2: ADMINISTRACION ---
 with tabs[1]:
     st.subheader("📦 GESTIÓN DE PRODUCTOS")
     
-    # Botón de Descarga Excel (Lado derecho superior)
     c_ex1, c_ex2 = st.columns([2,1])
     with c_ex2:
         datos_xlsx = exportar_excel(st.session_state.inventario)
@@ -210,3 +220,4 @@ with tabs[1]:
     if st.button("🚨 ELIMINAR TOTALMENTE"):
         st.session_state.inventario = [x for x in st.session_state.inventario if x['Producto'] != p_del]
         guardar_datos(st.session_state.inventario); st.rerun()
+
