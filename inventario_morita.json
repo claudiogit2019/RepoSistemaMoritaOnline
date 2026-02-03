@@ -1,1 +1,86 @@
-[{"Producto": "arroz tato", "Precio": 950.0, "Stock": 39}, {"Producto": "cebolla kg", "Precio": 450.0, "Stock": 16}, {"Producto": "pasta dental kolino", "Precio": 7000.0, "Stock": 22}]
+[
+    {
+        "Producto": "coca cola 3  ls ",
+        "Precio": 5000.0,
+        "Stock": 20.0,
+        "Rubro": "Bebidas"
+    },
+    {
+        "Producto": "cerveza salta1.5 ls",
+        "Precio": 3000.0,
+        "Stock": 30.0,
+        "Rubro": "Bebidas"
+    },
+    {
+        "Producto": "cerveza norte 1.5 ls",
+        "Precio": 4000.0,
+        "Stock": 19.0,
+        "Rubro": "Bebidas"
+    },
+    {
+        "Producto": "pepsi 1 ls",
+        "Precio": 2500.0,
+        "Stock": 10.0,
+        "Rubro": "Bebidas"
+    },
+    {
+        "Producto": "papa",
+        "Precio": 1500.0,
+        "Stock": 49.5,
+        "Rubro": "Verdura"
+    },
+    {
+        "Producto": "tomate",
+        "Precio": 1200.0,
+        "Stock": 40.0,
+        "Rubro": "Verdura"
+    },
+    {
+        "Producto": "cebolla",
+        "Precio": 500.0,
+        "Stock": 26.5,
+        "Rubro": "Verdura"
+    },
+    {
+        "Producto": "queso paulina ",
+        "Precio": 8000.0,
+        "Stock": 40.0,
+        "Rubro": "Otros"
+    },
+    {
+        "Producto": "queso cremon",
+        "Precio": 9000.0,
+        "Stock": 50.0,
+        "Rubro": "Otros"
+    },
+    {
+        "Producto": "mortadela 888",
+        "Precio": 1200.0,
+        "Stock": 30.0,
+        "Rubro": "Otros"
+    },
+    {
+        "Producto": "harina 000",
+        "Precio": 800.0,
+        "Stock": 20.0,
+        "Rubro": "Almacén"
+    },
+    {
+        "Producto": "harina 0000",
+        "Precio": 1200.0,
+        "Stock": 28.0,
+        "Rubro": "Almacén"
+    },
+    {
+        "Producto": "jabon en polvo 1 kg",
+        "Precio": 1200.0,
+        "Stock": 20.0,
+        "Rubro": "Limpieza"
+    },
+    {
+        "Producto": "jabon en polvo 3 kg zorro",
+        "Precio": 1500.0,
+        "Stock": 20.0,
+        "Rubro": "Limpieza"
+    }
+]
